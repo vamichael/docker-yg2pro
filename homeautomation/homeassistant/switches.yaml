@@ -1,0 +1,19 @@
+- platform: wake_on_lan
+  name: cp1
+  mac_address: "54-04-A6-BF-01-53"
+  host: cp1.
+  broadcast_address: 255.255.255.255
+
+# - platform: template
+#   switches:
+#     debug:
+#       #icon_template: mdi:key-remove
+#       value_template: "{{ is_state('input_boolean.foo', 'on') }}"
+#       turn_on:
+#         service: automation.trigger
+#         data:
+#           entity_id: automation.garage_opened_and_sensors_detected_quick_close
+#       turn_off:
+#         service: automation.trigger
+#         data:
+#           entity_id: automation.garage_closed_cancel_vehicle_timer_set_default_close_time

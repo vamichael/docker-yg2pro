@@ -1,0 +1,107 @@
+- alias: Vehicle Sensor in Range - turn on boolean
+  trigger:
+    platform: numeric_state 
+    entity_id: sensor.bmw, sensor.hyundai
+    above: 0
+  action: 
+    - service: input_boolean.turn_on
+      data_template:
+        entity_id: "input_boolean.{{trigger.to_state.attributes.esp_home_input_boolean}}"
+
+- alias: Vehicle Sensor Unavailable - start timer to close garage
+  trigger:
+    platform: state
+    entity_id: sensor.bmw, sensor.hyundai
+    to: 'unavailable'
+  condition:
+    - condition: template
+      value_template: '{{ states.sensor.hyundai | int == 0 }}'
+    - condition: template
+      value_template: '{{ states.sensor.bmw | int == 0 }}'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: input_boolean.bmw_opened_garage
+          state: 'on'
+        - condition: state
+          entity_id: input_boolean.hyundai_opened_garage
+          state: 'on'
+
+  action:
+    - service: script.turn_on
+      entity_id: script.start_car_close_garage_timer
+
+- alias: Vehicle Sensor Unavailable - cleanup
+  trigger:
+    platform: state
+    entity_id: sensor.bmw, sensor.hyundai
+    to: 'unavailable'
+  action:
+    - service: input_boolean.turn_off
+      data_template:
+        entity_id: "input_boolean.{{trigger.to_state.attributes.esp_home_input_boolean}}" 
+
+- alias: sensor_boolean_turned_on-open_garage
+  trigger:
+    platform: state
+    entity_id: input_boolean.bmw_opened_garage, input_boolean.hyundai_opened_garage
+    to: 'on'
+  condition:   
+    - condition: state
+      entity_id: cover.garage_door_opener
+      state: 'closed'
+  action:
+    - service: script.turn_on
+      entity_id: script.car_open_garage   
+  
+- alias: Garage Opened and sensors detected - quick close
+  trigger:
+    platform: state
+    entity_id: cover.garage_door_opener
+    to: 'opening'
+  action:
+    - service: input_text.set_value
+      data_template:    
+        entity_id: input_text.esphome_garage_delay
+        value: >-
+            {% set long_delay = states('input_text.long_delay') %}
+            {% set motion_detected = states('binary_sensor.1st_garage_motion_sensor') %}
+            {% set vehicle_detected = (states('input_boolean.bmw_opened_garage') == 'on' or states('input_boolean.hyundai_opened_garage') == 'on') %}
+            {% if (motion_detected == 'on' or vehicle_detected == 'true')  %}
+                {{1}}
+            {% else %}
+                {{long_delay}}
+            {% endif %}
+
+- alias: Vehicle Timer Elapsed - Close Garage
+  trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.car_close_garage
+  action:
+    - service: script.turn_on
+      entity_id: script.car_close_garage
+
+- alias: garage debug
+  trigger:
+    platform: state
+    entity_id: cover.garage_door_opener
+  condition:
+    - condition: state
+      entity_id: input_text.esp_car_debug
+      state: 'on'
+  action:
+    - service: persistent_notification.create
+      data_template:
+        title: 'garage debug'
+        message: '{{trigger.to_state}}'
+
+- alias: Garage_Closed-Cancel_Vehicle_Timer-Set_default_close_time
+  trigger:
+    platform: state
+    entity_id: cover.garage_door_opener
+    to: 'closed'
+  action:
+    - service: timer.cancel
+      entity_id: timer.car_close_garage

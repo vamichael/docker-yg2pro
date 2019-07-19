@@ -1,0 +1,20 @@
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+
+DOMAINNAME=example.com
+CLOUDFLARE_EMAIL=someemail@gmail.com
+CLOUDFLARE_API_KEY=XXX
+PIHOLE_PASSWORD=XXX
+CLOUD9_AUTH=root:XXX
+CLOUD9_SYSTEM_AUTH=root:XXX
+
+
+### used in Home Assistant ###
+PUID=1000
+PGID=999
+TZ=America/New_York
+USERDIR=/home/yourname
+HA_DATABASE=homeassistant
+MYSQL_ROOT_PASSWORD=XXX
+MYSQL_USER=sqluser
+MYSQL_USER_PASSWORD=XXX
+### used in Home Assistant ###

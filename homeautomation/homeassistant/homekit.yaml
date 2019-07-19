@@ -1,0 +1,27 @@
+auto_start: false
+filter:
+  exclude_domains:
+    - alarm_control_panel
+    - automation 
+    - input_boolean
+    - remote 
+    - script
+    - binary_sensor
+#    - climate
+    - cover
+    - device_tracker
+    - fan
+    - light
+    - lock
+    - media_player
+    - sensor
+    - switch
+  include_entities:
+    - cover.garage_door_opener
+    - script.temporarily_disable_pihole
+    - input_boolean.autolock
+    - switch.ecolink_stls3
+    - switch.cp1
+    - switch.porch_deck
+    - lock.front_door_lock
+ 

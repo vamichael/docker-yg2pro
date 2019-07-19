@@ -1,0 +1,61 @@
+- alias: Mike in bed
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.hx711_custom
+    above: !secret mike_weight
+  condition:   
+    - condition: state
+      entity_id: input_boolean.auto_fan
+      state: 'on'
+  action:
+    - service: switch.turn_on
+      entity_id: switch.mbr_fan
+
+- alias: Mike out of bed
+  condition:   
+    - condition: state
+      entity_id: input_boolean.auto_fan
+      state: 'on'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.hx711_custom
+    value_template: '{{states.sensor.hx711_custom.state}}'
+    below: !secret mike_weight
+    for:
+      seconds: 120
+  action:
+    - service: switch.turn_off
+      entity_id: switch.mbr_fan
+
+- alias: "Autofan on"
+  trigger:
+    platform: state
+    entity_id: input_boolean.auto_fan
+    to: 'on'
+  action:
+    - service: switch.turn_on
+      entity_id: switch.mbr_fan
+
+- alias: "Autofan off"
+  trigger:
+    platform: state
+    entity_id: input_boolean.auto_fan
+    to: 'off'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.mbr_fan
+
+- alias: Penny
+  trigger:
+    platform: state 
+    entity_id: sensor.hx711_custom
+  condition:
+    - condition: template
+      value_template: "{{(((trigger.from_state.state | float) - (trigger.to_state.state | float)) | abs) >= 10.5}}"
+    - condition: template
+      value_template: "{{(((trigger.from_state.state | float) - (trigger.to_state.state | float)) | abs) <= 11.25}}"
+  action:
+    - service: notify.notify
+      data_template:
+        title: "HX711"    
+        message: "{{(trigger.from_state.state | float)}}:{{(trigger.to_state.state | float)}}"

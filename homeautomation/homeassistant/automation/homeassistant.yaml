@@ -1,0 +1,38 @@
+- alias: Restart Home Assistant
+  trigger:
+    platform: webhook
+    webhook_id: !secret restart_token
+  action:
+    - service: homeassistant.restart
+
+- alias: Latest version updated
+  initial_state: false
+  trigger:
+    - platform: state
+      entity_id: sensor.latest_version
+  action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.version_checked
+
+- alias: Check New Version
+  trigger:
+    platform: time_pattern
+    minutes: '/15'
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{ states('sensor.current_version') != states('sensor.latest_version') }}"
+      - condition: template
+        value_template: "{{ states('sensor.latest_version') != 'unavailable'}}"
+      - condition: state
+        entity_id: input_boolean.version_checked
+        state: 'on'
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.version_checked
+    - service: persistent_notification.create
+      data_template:
+        message: "{{states('sensor.latest_version') | string }} is available for download" 
+        title: 'Update available'
+

@@ -1,0 +1,17 @@
+system_cleanup:
+  sequence:
+    - service: homekit.start
+    - service: automation.turn_on
+      entity_id: group.all_automations
+    - service: switch.turn_off
+      entity_id: group.timeout_devices
+    - service: script.turn_on
+      entity_id: script.start_front_door_custom_timer
+    - service: script.turn_on
+      entity_id: script.start_garage_custom_timer
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.system_ready
+    # - service: persistent_notification.create
+    #   data_template:
+    #     title: 'system cleanup finished'
+    #     message: '{{now()}}'

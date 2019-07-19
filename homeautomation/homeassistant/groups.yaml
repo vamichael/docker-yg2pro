@@ -1,0 +1,34 @@
+timeout_devices:
+  entities:
+    - switch.homeseer_switch_mba_fan
+    - switch.1st_bathroom_fan
+
+front_door:
+  name: Entrances
+  entities:
+    - lock.front_door_lock
+    - cover.garage_door_opener
+    - timer.front_door
+    - timer.garage_door
+    
+google_home_devices:
+  name: Google Home devices
+  entities:
+    - media_player.bathroom_speaker
+    - media_player.entryway_speaker
+    - media_player.living_room_speaker
+    - media_player.bedroom_speaker
+    - media_player.den_speaker
+
+auto_lock:
+  name: Auto-lock
+  entities:
+    - input_boolean.autolock
+    - timer.auto_lock_disable
+
+battery:
+  name: Battery Levels
+  entities:
+    - sensor.battery_frontdoor
+    - sensor.vision_front_door_battery
+    - binary_sensor.1st_floor_motion_sensor_lowba

@@ -1,0 +1,89 @@
+project_id: !secret GAproject_id
+api_key: !secret GAHomeGraph_key
+
+expose_by_default: false
+
+entity_config:
+  input_boolean.autolock:
+    name: 'Auto Lock'
+    expose: true
+  script.temporarily_disable_pihole:
+    name: 'Shut your pie hole'
+    expose: true
+  switch.ecolink_stls3:
+    #name: 'Fireplace'
+    expose: true
+  switch.porch_deck:
+    expose: true
+  switch.cp1:
+    expose: true
+  input_boolean.auto_fan:
+    name: 'auto fan'
+    expose: true
+  cover.google_frontdoor:
+    name: 'front door'
+    expose: true
+  cover.google_garagedoor:
+    name: 'garage door'
+    expose: true
+###########  From ISY ###########
+  # switch.1st_bathroom_fan:
+  #   name:  'kitty fan'
+  #   expose: true
+  # switch.3brd2_mbr_fan:
+  #   name:  'fan'
+  #   expose: true
+  # light.4stb1_attic:
+  #   name:  'attic fan'
+  #   expose: true
+  # switch.den_fan:
+  #   name:  'den fan'
+  #   expose: true
+  # switch.den_main:
+  #   name:  'den'
+  #   expose: true
+  # switch.family_room_main:
+  #   name:  'living room'
+  #   expose: true
+  # switch.fr_fan:
+  #   name:  'family room fan'
+  #   expose: true
+  # switch.kitchen_main:
+  #   name:  'kitchen'
+  #   expose: true
+  # switch.leaving:
+  #   name:  'lock down'
+  #   expose: true
+  # switch.main_level:
+  #   name:  'main level'
+  #   expose: true
+  # switch.mba_bathroom:
+  #   name:  'bath room'
+  #   expose: true
+  # switch.mbr_ambience:
+  #   name:  'ambiance'
+  #   expose: true
+  # switch.mbr_bedtime:
+  #   name:  'bed time'
+  #   expose: true
+  # switch.mbr_master_bedroom_general:
+  #   name:  'master bedroom'
+  #   expose: true
+  # switch.mbr_reading:
+  #   name:  'reading'
+  #   expose: true
+  # switch.movie:
+  #   name:  'movie lights'
+  #   expose: true
+  # switch.shower:
+  #   name:  'shower'
+  #   expose: true
+  # switch.stairs_all:
+  #   name:  'stairs'
+  #   expose: true
+  # switch.upstairs:
+  #   name:  'upstairs'
+  #   expose: true
+  # switch.shower:
+  #   name:  'welcome home'
+  #   expose: true

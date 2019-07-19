@@ -1,0 +1,14 @@
+- alias: Zwave_loaded_Start_System
+  initial_state: true
+  trigger:
+    - platform: event
+      event_type: zwave.network_ready
+    - platform: event
+      event_type: zwave.network_complete
+    - platform: event
+      event_type: zwave.network_complete_some_dead
+  action:
+    - service: script.turn_on
+      entity_id: script.system_cleanup
+
+

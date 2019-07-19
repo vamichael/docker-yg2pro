@@ -1,0 +1,20 @@
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+
+DOMAINNAME=noakland.com
+CLOUDFLARE_EMAIL=vamichael@gmail.com
+CLOUDFLARE_API_KEY=2f500242b98056a72f723b4b4f9ac31956385
+PIHOLE_PASSWORD=Mik31968
+CLOUD9_AUTH=root:Mik31968
+CLOUD9_SYSTEM_AUTH=root:Mik31968999
+
+
+### used in Home Assistant ###
+PUID=1000
+PGID=999
+TZ=America/New_York
+USERDIR=/home/mike
+HA_DATABASE=homeassistant
+MYSQL_ROOT_PASSWORD=Mik31968999
+MYSQL_USER=sqluser
+MYSQL_USER_PASSWORD=Mik31968
+### used in Home Assistant ###

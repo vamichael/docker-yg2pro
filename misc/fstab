@@ -1,0 +1,4 @@
+UUID=8a2c7a8c-2a9b-11e9-a776-aaaaaaeeeeee / ext4 defaults 0 0
+/swap.img	none	swap	sw	0	0
+
+//172.16.68.99/docker_nuc/ /home/mike/nas cifs username=windowsuser,password=winpassword,domain=172.16.68.99,uid=1000

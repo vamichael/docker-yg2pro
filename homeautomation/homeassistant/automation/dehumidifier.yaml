@@ -1,0 +1,54 @@
+- alias: Dehumidifier humidity rises
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.dehumidifer_above_level
+      to: 'on'
+      for:
+        seconds: 10
+  condition:   
+    - condition: state
+      entity_id: switch.dehumidifier_relay
+      state: 'off'
+  action:
+    - service: switch.turn_on
+      entity_id: switch.dehumidifier_relay
+    - service: light.turn_on
+      data:
+        entity_id: light.attic_fan
+        brightness_pct: 100
+    - service: notify.notify
+      data:
+        title: "Dehumidifier"    
+        message: "Dehumidifier ON"
+
+- alias: Dehumidifier humidity falls
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.dehumidifer_above_level
+      to: 'off'
+      for:
+        minutes: 3
+    - platform: state
+      entity_id: sensor.dehumidifier_humidity
+      to: 'unavailable'
+      for:
+        minutes: 3
+  condition:   
+    - condition: state
+      entity_id: switch.dehumidifier_relay
+      state: 'on'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.dehumidifier_relay
+    - service: light.turn_off
+      entity_id: light.attic_fan
+    - service: notify.notify
+      data:
+        title: "Dehumidifier"    
+        message: "Dehumidifier OFF"
+    - service: light.turn_on
+      data:
+        entity_id: light.attic_fan
+        brightness_pct: 0
+    # - service: light.turn_off
+    #   entity_id: light.attic_fan

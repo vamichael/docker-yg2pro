@@ -1,0 +1,27 @@
+"conversionFolderBookmarkData" : {
+   "__type__" : "buffer",
+   "mimeType" : "",
+   "value" : "L3RyYW5zY29kZQ=="
+},
+"multiUserMode" : false,
+"sharedFolders" : [
+   {
+      "bookmarkData" : {
+         "__type__" : "buffer",
+         "mimeType" : "",
+         "value" : "L21lZGlh"
+      },
+      "displayName" : "Media",
+      "id" : "3c91b5a8-5499-11e9-bc38-aaaaaaffffff"
+   }
+],
+"singleUserPassword" : "",
+"userAccounts" : [
+   {
+      "accessAllFolders" : true,
+      "allowedFolders" : [],
+      "id" : "master",
+      "password" : "",
+      "userName" : "Master"
+   }
+]

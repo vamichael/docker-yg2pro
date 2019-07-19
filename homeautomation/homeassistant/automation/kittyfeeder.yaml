@@ -1,0 +1,89 @@
+- alias: "Feeding Time - 60 sec"
+  trigger:
+    - platform: sun
+      event: sunrise
+      offset: "-00:15:00"
+  action:
+    - service: script.turn_on
+      entity_id: script.start_feeding
+      data:
+        variables:
+          duration: "60"
+
+- alias: "Feeding Time - 30 sec"
+  trigger:
+#    - platform: time
+#      at: '08:00:00'
+    - platform: time
+      at: '11:00:00'
+    - platform: time
+      at: '14:00:00'
+    - platform: time
+      at: '17:00:00'
+    - platform: time
+      at: '20:00:00'
+   # - platform: time
+   #   at: '23:00:00'
+  action:
+    - service: script.turn_on
+      entity_id: script.start_feeding
+      data:
+        variables:
+          duration: "30"
+
+- alias: Kitty Timer Started
+  trigger:
+    platform: event
+    event_type: timer.started
+    event_data:
+      entity_id: timer.kitty_feeder
+  action:
+    - service: switch.turn_on
+      entity_id: switch.kitty_feeder_relay
+    - service: script.ios_notify_feeder
+      data:
+        message: "ON"
+
+- alias: Kitty Timer Cancelled
+  trigger:
+    platform: event
+    event_type: timer.cancelled
+    event_data:
+      entity_id: timer.kitty_feeder
+  action:
+    - service: timer.finish
+      entity_id: timer.kitty_feeder
+
+- alias: Kitty Timer Finished
+  trigger:
+    platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.kitty_feeder
+  action:
+    - service: switch.turn_off
+      entity_id: switch.kitty_feeder_relay
+    - service: script.ios_notify_feeder
+      data:
+        message: "OFF"
+
+- alias: Kitty Feeder Overrun
+  trigger:
+    - platform: state
+      entity_id: timer.kitty_feeder
+      to: 'active'
+      for:
+        seconds: !secret kitty_feeder_overrun
+    - platform: state
+      entity_id: switch.kitty_feeder_relay
+      to: 'on'
+      for:
+        seconds: !secret kitty_feeder_overrun
+  action:
+    - service: script.ios_notify_feeder
+      data:
+        message: "OVERRUN"
+    - service: switch.turn_off
+      entity_id: switch.kitty_feeder_relay
+    - service: timer.cancel
+      entity_id: timer.kitty_feeder

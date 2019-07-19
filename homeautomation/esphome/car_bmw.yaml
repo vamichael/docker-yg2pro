@@ -1,0 +1,59 @@
+esphome:
+  name: car_bmw
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: "SoftKittyWarmKitty"
+  password: "68ecececec"
+  fast_connect: true
+  use_address: 172.16.68.121
+  reboot_timeout: 0s
+  
+  manual_ip:
+    static_ip: 172.16.68.121
+    gateway: 172.16.68.1
+    subnet: 255.255.255.0
+
+mqtt:
+  discovery: true
+  discovery_prefix: homeassistant
+  client_id: home-assistant-esphome-bmw
+  broker: 172.16.68.62
+  username: mqtt
+  password: mqtt1968!
+  reboot_timeout: 0s
+  keepalive: 2s
+    
+logger:
+
+ota:
+  password: 'spooey'
+
+binary_sensor:
+  - platform: status
+    name: "Garage Opened BMW"
+    id: garage_opened_bmw
+
+sensor:
+  - platform: template
+    name: "BMW"
+    lambda: |-
+    
+      static int num_cycles = 0;
+      static int prev_count = 0;
+      int retVal;
+      num_cycles += 1;
+      bool ha_responded = (id(garage_opened_bmw).state); // Home Assistant set binary_sensor ON
+      if (ha_responded) {
+        retVal = prev_count;
+      }
+      else
+      {
+        retVal = num_cycles;
+        prev_count = num_cycles;
+      }
+      return retVal;
+    
+    update_interval: 1000ms
+    

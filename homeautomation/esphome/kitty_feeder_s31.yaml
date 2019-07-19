@@ -1,0 +1,73 @@
+esphome:
+  name: kitty_feeder_s31
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: "SoftKittyWarmKitty"
+  password: "68ecececec"
+  use_address: 172.16.68.26
+  reboot_timeout: 0s
+  
+  manual_ip:
+    static_ip: 172.16.68.26
+    gateway: 172.16.68.1
+    subnet: 255.255.255.0
+
+# Enable logging
+logger:
+  baud_rate: 0
+
+uart:
+  rx_pin: RX
+  baud_rate: 4800
+  
+# Enable Home Assistant API
+api:
+  password: "spooey"
+
+ota:
+  password: "spooey"
+
+########################################
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "Kitty Feeder button"
+    on_press:
+      - switch.toggle: relay
+
+sensor:
+  - platform: wifi_signal
+    name: "Kitty Feeder S31 WiFi signal"
+    update_interval: 60s
+
+  - platform: uptime
+    name: "Kitty Feeder S31 uptime"
+    
+  - platform: cse7766
+    current:
+      name: "Kitty Feeder R2 Current"
+    voltage:
+      name: "Kitty Feeder R2 Voltage"
+    power:
+      name: "Kitty Feeder R2 Power"    
+
+text_sensor:
+  - platform: version
+    name: "Kitty Feeder ESPHome version"
+
+switch:
+  - platform: gpio
+    name: "Kitty Feeder relay"
+    pin: GPIO12
+    id: relay
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: yes

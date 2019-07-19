@@ -1,0 +1,9 @@
+customize_glob:
+  "*bmw*":
+    hidden: true
+  "*BMW*":
+    hidden: true
+  "*hyund*":
+    hidden: true
+  "*Hyund*":
+    hidden: true

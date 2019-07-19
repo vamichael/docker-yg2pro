@@ -1,0 +1,91 @@
+- alias: Bathroom Fan Off
+  trigger:
+    platform: state
+    entity_id: switch.1st_bathroom_fan
+    to: 'off'
+  action:
+    - service: timer.cancel
+      entity_id: timer.litterbox
+
+- alias: Litterbox Motion Triggered
+  hide_entity: false
+  trigger:
+    platform: state
+    entity_id: binary_sensor.1st_bathroom_sensor_sensor
+    to: 'on'
+  action:
+    - service: ifttt.trigger
+      data_template: {"event":"HBMS", "value1":"{{states.sensor.h2ssensor_h2s.state}}"}
+    - service: script.turn_on
+      entity_id: script.timeout_1st_bathroom_motion_sensor
+
+- alias: H2Spresence Get Threshold
+  trigger:
+    platform: mqtt
+    topic: h2ssensor/getthreshold
+    payload: '1'
+  action:
+    - service: mqtt.publish
+      data:
+        topic: h2ssensor/threshold
+        payload: !secret H2Spresence_Threshold 
+    - service: ifttt.trigger
+      data: {"event": "H2SGetThreshold"}
+  
+- alias: H2Spresence ON
+  hide_entity: false
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.h2ssensor_h2s
+    above: !secret H2Spresence_Threshold
+  condition:
+    condition: state
+    entity_id: switch.1st_bathroom_fan
+    state: 'off'
+  action:
+    - service: ifttt.trigger
+      data_template: {"event": "H2SThresholdElevated", "value1":"{{states.sensor.h2ssensor_h2s.state}}"}
+    - service: ifttt.trigger
+      data_template: {"event":"HBH2S", "value1":"{{states.sensor.h2ssensor_h2s.state}}"}
+    - service: switch.turn_on
+      entity_id: switch.1st_bathroom_fan
+    - service: timer.start
+      entity_id: timer.litterbox
+
+- alias: Litter Box Timer Finished
+  trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.litterbox
+  action:
+    - service: switch.turn_off
+      entity_id: switch.1st_bathroom_fan
+    - service: timer.cancel
+      entity_id: timer.litterbox
+
+- alias: Start sensor calibration
+  trigger:
+    platform: state
+    entity_id: input_boolean.calibrate
+    to: 'on'
+  action:
+    - service: mqtt.publish
+      data:
+        topic: h2ssensor/calibrate
+        payload: 1 
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.calibrate
+    - service: ifttt.trigger
+      data: {"event": "H2SCalibration"}
+
+- alias: "Bathroom Fan On for 30"
+  trigger:
+    platform: state
+    entity_id: switch.1st_bathroom_fan
+    to: 'on'
+    for:
+      minutes: 30
+  action:
+    - service: switch.turn_off
+      entity_id: switch.1st_bathroom_fan

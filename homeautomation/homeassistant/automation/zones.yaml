@@ -1,0 +1,24 @@
+- alias: Dena Leave Work
+  trigger:
+    platform: zone
+    entity_id: device_tracker.denas_iphone
+    zone: zone.dena_work
+    event: leave
+  action:
+     - service: notify.notify
+       data:
+         title: "Zone"
+         message: "Left work"
+    
+- alias: Dena Home
+  trigger:
+    platform: zone
+    entity_id: device_tracker.denas_iphone
+    zone: zone.home_zone
+    event: enter
+  action:
+     - service: notify.notify
+       data:
+         title: "Zone"
+         message: "Enter home zone"
+    

@@ -1,0 +1,73 @@
+esphome:
+  name: dehumidifier_s31
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: "SoftKittyWarmKitty"
+  password: "68ecececec"
+  use_address: 172.16.68.25
+  reboot_timeout: 0s
+  
+  manual_ip:
+    static_ip: 172.16.68.25
+    gateway: 172.16.68.1
+    subnet: 255.255.255.0
+
+# Enable logging
+logger:
+  baud_rate: 0
+
+uart:
+  rx_pin: RX
+  baud_rate: 4800
+  
+# Enable Home Assistant API
+api:
+  password: "spooey"
+
+ota:
+  password: "spooey"
+
+########################################
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "Dehumidifier button"
+    on_press:
+      - switch.toggle: relay
+
+sensor:
+  - platform: wifi_signal
+    name: "Dehumidifier S31 WiFi signal"
+    update_interval: 60s
+
+  - platform: uptime
+    name: "Dehumidifier S31 uptime"
+    
+  - platform: cse7766
+    current:
+      name: "Dehumidifier R2 Current"
+    voltage:
+      name: "Dehumidifier R2 Voltage"
+    power:
+      name: "Dehumidifier R2 Power"    
+
+text_sensor:
+  - platform: version
+    name: "Dehumidifier ESPHome version"
+
+switch:
+  - platform: gpio
+    name: "Dehumidifier relay"
+    pin: GPIO12
+    id: relay
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: yes

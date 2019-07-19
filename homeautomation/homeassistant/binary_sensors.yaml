@@ -1,0 +1,63 @@
+
+
+#Latest: {{states('sensor.latest_version')}}
+#Current: {{states('sensor.current_version')}}
+
+
+- platform: template
+  sensors:
+
+    dehumidifer_above_level:
+      value_template: "{{ states('sensor.dehumidifier_humidity')|float >= states('input_number.humidity_level')|float }}"
+  
+    system_ready:
+      friendly_name: "System ready"
+      value_template: "{{ is_state('input_boolean.system_ready', 'on') }}"
+      device_class: moving
+      
+    front_door_access_control:
+      value_template: "{{ is_state('sensor.vision_front_door_access_control', '22') }}"
+      friendly_name: "Front Door"
+      device_class: door
+
+    front_door_tamper:
+      value_template: "{{ is_state('sensor.vision_front_door_burglar', '3') }}"
+      friendly_name: "Front Door Sensor Tamper"
+      device_class: safety
+      
+    mba_bath_sensor_low_battery:
+      value_template: "{{ is_state('binary_sensor.1st_bathroom_sensor_low_bat', 'on') }}"
+      friendly_name: "MBA motion sensor battery"
+      device_class: battery
+
+    entry_sensor_low_battery:
+      value_template: "{{ is_state('binary_sensor.1st_bathroom_sensor_low_bat', 'on') }}"
+      friendly_name: "Entry motion sensor battery"
+      device_class: battery
+      
+    1st_bath_sensor_low_battery:
+      value_template: "{{ is_state('binary_sensor.1st_bathroom_sensor_low_bat', 'on') }}"
+      friendly_name: "1st bathroom motion sensor battery"
+      device_class: battery
+      
+    humidity_level_returned:
+      friendly_name: "Humidity level returned"
+      value_template: "{{ (states.sensor.mba_humidity.state | float)  <= (states.input_text.save_mba_humidity.state | float) and (is_state('switch.homeseer_switch_mba_fan', 'on')) }}"  
+      device_class: moving
+      
+- platform: trend
+  sensors:
+    bathroom_humidity_rising:
+      entity_id: sensor.mba_humidity
+      friendly_name: Bathroom Humidity Rising
+      sample_duration: 259200
+      min_gradient: 0.02
+      max_samples: 60
+      device_class: moisture
+    bathroom_humidity_falling:
+      entity_id: sensor.mba_humidity
+      friendly_name: Bathroom Humidity Falling
+      sample_duration: 259200
+      min_gradient: -0.02
+      max_samples: 60
+      device_class: moisture

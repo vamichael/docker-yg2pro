@@ -1,0 +1,159 @@
+debug_msg:
+  sequence:
+    - service: persistent_notification.create
+      data_template:
+        title: "debug"
+        message: "{{message}}"
+
+
+temporarily_disable_pihole:
+  sequence:
+    - service: shell_command.temporarily_disable_pihole
+    - service: script.turn_off
+      entity_id: script.temporarily_disable_pihole
+
+evalute_user_parameters:
+  sequence:
+    - service_template: >
+         {% if state == 'on' %}
+            input_boolean.turn_on
+         {% else %}
+            input_boolean.turn_off
+         {% endif %}
+         
+      data_template:
+        entity_id: >-
+          {% set inputbool = 'input_boolean.front_door_active_' + usernumber | string %}
+          {{ inputbool }}
+
+ios_notify_feeder:
+  sequence:
+    - condition: state
+      entity_id: input_boolean.feeder_notify
+      state: 'on'
+    - service: notify.notify
+      data_template:   
+         title: "Kitty Feeder"
+         message: "{{message}}"
+
+start_feeding:
+  sequence:
+    - service: timer.cancel
+      entity_id: timer.kitty_feeder
+    - service: timer.start
+      data_template:   
+         entity_id: timer.kitty_feeder
+         duration: "{{duration}}"
+
+beep_entryway:
+  sequence:
+    - service: media_player.play_media 
+      data_template:                 
+        entity_id: media_player.entryway_speaker
+        media_content_id: https://homeassistant.noakland.com/local/Bleep-SoundBible.com-1927126940.mp3
+        media_content_type: 'audio/mp3' 
+    - delay:
+        milliseconds: 20
+    - service: media_player.play_media 
+      data_template:                 
+        entity_id: media_player.entryway_speaker
+        media_content_id: https://homeassistant.noakland.com/local/Bleep-SoundBible.com-1927126940.mp3
+        media_content_type: 'audio/mp3' 
+
+start_garage_custom_timer:
+  sequence:
+    - condition: state
+      entity_id: input_boolean.autolock
+      state: 'on'
+    - condition: state
+      entity_id: cover.garage_door_opener
+      state: 'open'
+    - service: timer.cancel
+      entity_id:  timer.garage_door
+    - service: timer.start
+      entity_id: timer.garage_door
+      
+start_front_door_custom_timer:
+  sequence:
+    - condition: state
+      entity_id: input_boolean.autolock
+      state: 'on'
+    - condition: state
+      entity_id: lock.front_door_lock
+      state: 'unlocked'
+    - service: timer.cancel
+      entity_id:  timer.front_door
+    - service: timer.start
+      data_template:    # if next_dusk happens sooner than next_dawn, then (next_dusk - next_dawn) < 0
+         entity_id: timer.front_door
+         duration: >
+          {% if ((((as_timestamp(states.sun.sun.attributes.next_dusk)) - (as_timestamp(states.sun.sun.attributes.next_dawn)))) < 0) %}
+             {{ states('input_text.door_time_long')}}
+          {% else %}
+             {{ states('input_text.door_time_short')}}
+          {% endif %}
+          
+timeout_1st_bathroom_motion_sensor:
+  sequence:
+    - service: automation.turn_off
+      entity_id: automation.1st_bath_motion_triggered
+    - delay: '00:01:00'
+    - service: automation.turn_on
+      entity_id: automation.1st_bath_motion_triggered
+      
+frontdoorlowbatterydetected:
+  sequence:
+    - service: ifttt.trigger
+      data_template: {"event":"FrontDoorLowBatteryDetected", "value1":"{{ states.sensor.battery_frontdoor.state }}"}    
+
+lock_front_door:
+  sequence:
+  - condition: state
+    entity_id: input_boolean.autolock
+    state: 'on'
+  - service: script.turn_on
+    data_template:
+      entity_id: >
+        {% if is_state('binary_sensor.front_door_access_control', 'on') and (states.zwave.vision.front_door_sensor.attributes.is_ready) %}
+          script.retry_lock_door
+        {% else %}
+          script.call_lock_front_door
+        {% endif %}  
+        
+call_lock_front_door:
+  sequence:
+    service: lock.lock
+    entity_id: lock.front_door_lock
+
+retry_lock_door:
+  sequence:
+    - service: script.turn_on
+      data_template:
+        entity_id: >
+          {% if is_state('binary_sensor.front_door_access_control', 'on') and (states.zwave.vision.front_door_sensor.attributes.is_ready) %}
+            script.beep_entryway
+          {% endif %}
+    - delay: 00:00:15
+    - service: script.turn_on
+      entity_id: script.lock_front_door
+  
+customstartup:
+  sequence:
+    # - service: persistent_notification.create
+    #   data_template:
+    #     title: 'customstartup'
+    #     message: '{{now()}}'
+    - service: automation.turn_off
+      entity_id: group.all_automations
+    - service: automation.turn_on
+      entity_id: automation.Zwave_loaded_Start_System
+    - service: timer.cancel
+      entity_id:
+        - timer.litterbox
+        - timer.garage_door
+        - timer.front_door
+        - timer.fireplace
+        - timer.auto_lock_disable
+    - service: script.turn_on
+      entity_id: google_assistant.request_sync
+

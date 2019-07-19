@@ -1,0 +1,68 @@
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+  [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+  
+[backends]
+  [backends.backend-torrent]
+    [backends.backend-torrent.servers]
+      [backends.backend-torrent.servers.server-homeassistant-ext]
+      url = "http://172.16.68.6:8085"
+      weight = 0
+
+  [backends.backend-lights]
+    [backends.backend-lights.servers]
+      [backends.backend-lights.servers.server-homeassistant-ext]
+      url = "http://172.16.68.6:8000"
+      weight = 1
+
+  [backends.backend-esphome]
+    [backends.backend-esphome.servers]
+      [backends.backend-esphome.servers.server-homeassistant-ext]
+      url = "http://172.16.68.62:6052"
+      weight = 4
+      
+  [backends.backend-homeassistant]
+    [backends.backend-homeassistant.servers]
+      [backends.backend-homeassistant.servers.server-homeassistant-ext]
+      url = "http://172.16.68.62:8123"
+      weight = 2
+
+[frontends]
+
+  [frontends.frontend-torrent]
+  backend = "backend-torrent"
+  passHostHeader = true
+  InsecureSkipVerify = true
+  [frontends.frontend-torrent.routes]
+    [frontends.frontend-torrent.routes.route-torrent-ext]
+    rule = "Host:torrent.noakland.com"
+
+  [frontends.frontend-lights]
+  backend = "backend-lights"
+  passHostHeader = true
+  InsecureSkipVerify = true
+  [frontends.frontend-lights.routes]
+    [frontends.frontend-lights.routes.route-lights-ext]
+    rule = "Host:lights.noakland.com"
+
+  [frontends.frontend-esphome]
+  backend = "backend-esphome"
+  passHostHeader = true
+  InsecureSkipVerify = true
+  [frontends.frontend-esphome.routes]
+    [frontends.frontend-esphome.routes.route-esphome-ext]
+    rule = "Host:esphome.noakland.com"
+
+  [frontends.frontend-homeassistant]
+  backend = "backend-homeassistant"
+  passHostHeader = true
+  InsecureSkipVerify = true
+  [frontends.frontend-homeassistant.routes]
+    [frontends.frontend-homeassistant.routes.route-homeassistant-ext]
+    rule = "Host:homeassistant.noakland.com"
+
+  

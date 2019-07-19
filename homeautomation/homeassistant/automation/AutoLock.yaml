@@ -1,0 +1,101 @@
+- alias: Front Door Unlocked
+  initial_state: false
+  trigger:
+    entity_id: lock.front_door_lock
+    platform: state
+    to: unlocked
+  action:
+    - service: script.turn_on
+      entity_id: script.start_front_door_custom_timer
+    # - service: notify.notify
+    #   data:
+    #     title: "Front Door"    
+    #     message: "Unlocked"
+    
+- alias: Front Door Locked
+  initial_state: false
+  trigger:
+    entity_id: lock.front_door_lock
+    platform: state
+    to: locked
+  action:
+    - service: timer.cancel
+      entity_id: timer.front_door
+    # - service: notify.notify
+    #   data:
+    #     title: "Front Door"    
+    #     message: "Locked"
+
+- alias: Lock Timer Finished
+  trigger:
+    platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.front_door
+  action:
+    service: script.turn_on
+    entity_id: script.lock_front_door
+    
+- alias: autolock finished
+  trigger:
+    platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.auto_lock_disable
+  action:
+    service: input_boolean.on
+    entity_id: input_boolean.autolock
+      
+- alias: Disable Auto Lock
+  trigger:
+    entity_id: input_boolean.autolock
+    platform: state
+    to: 'off'
+  action:
+    - service: timer.cancel
+      entity_id:
+        - timer.garage_door
+        - timer.front_door
+    - service: lock.unlock
+      entity_id: lock.front_door_lock
+    - service: timer.start
+      entity_id: timer.auto_lock_disable
+     
+- alias: Enable Auto Lock
+  trigger:
+    entity_id: input_boolean.autolock
+    platform: state
+    to: 'on'
+  action:
+    - service: timer.cancel
+      entity_id:
+        - timer.garage_door
+        - timer.front_door
+        - timer.auto_lock_disable
+    - service: script.turn_on
+      entity_id: script.lock_front_door
+    - service: cover.close_cover
+      entity_id: cover.garage_door_opener
+
+- alias: Front Door Sensor Close
+  trigger:
+    entity_id: binary_sensor.front_door_access_control
+    platform: state
+    to: 'off'
+  action:
+    # - service: notify.notify
+    #   data:
+    #     title: "Front Door"    
+    #     message: "Closed"
+
+- alias: Front Door Sensor Open
+  trigger:
+    entity_id: binary_sensor.front_door_access_control
+    platform: state
+    to: 'on'
+  action:
+    # - service: notify.notify
+    #   data:
+    #     title: "Front Door"    
+    #     message: "Opened"
+        

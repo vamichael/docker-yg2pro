@@ -1,0 +1,212 @@
+homeassistant:
+  name: Home
+  latitude: 38.895808
+  longitude: -77.106684
+  elevation: 269
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  # metric for Metric, imperial for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: !env_var TZ
+  # Customization file
+  customize: !include customize.yaml
+  customize_glob: !include customize.yaml
+  packages: !include_dir_named packages
+  
+#lovelace:
+#  mode: yaml
+
+hacs:
+  token: 2d7e2ef8ba4f63348748e5067099a21717e4ceb3
+
+config:
+
+system_health:
+
+#=====================================External Files==============================================
+frontend: !include frontend.yaml
+group: !include groups.yaml
+automation: !include_dir_merge_list automation/
+script: !include_dir_merge_named script/
+google_assistant: !include google_assistant.yaml
+shell_command: !include shell_command.yaml
+homekit: !include homekit.yaml
+timer: !include timers.yaml
+input_boolean: !include input_booleans.yaml
+input_number: !include input_numbers.yaml
+sensor: !include sensors.yaml
+binary_sensor: !include binary_sensors.yaml
+switch: !include switches.yaml
+cover: !include covers.yaml
+input_text: !include input_text.yaml
+input_datetime: !include input_datetime.yaml
+zone: !include zone.yaml
+#media_player: !include media_players.yaml
+#=====================================External Files==============================================
+
+isy994:
+  host: !secret isy_host
+  username: !secret isy_username
+  password: !secret isy_password
+#  tls: '1.2'
+# ignore_string: HomeAssistant
+ 
+# isy994mrf:
+#   host: !secret isy_host
+#   username: !secret isy_username
+#   password: !secret isy_password
+
+history:
+  exclude:
+    domains:
+#      - automation
+      - camera
+#      - frl_store
+#      - group
+#      - history_graph
+#      - light_store
+#      - media_player
+#      - scan_store
+#      - script
+#      - timer
+#      - updater
+#      - weather
+#      - zone
+#      - zwave
+    entities: # &exclude_entities
+      - sensor.mba_humidity
+      - sensor.mba_temperature
+      - sensor.hx711_custom
+
+      - sensor.h2ssensor_uptime
+      - sensor.h2ssensor_h2s
+      - binary_sensor.bathroom_humidity_falling
+      - binary_sensor.bathroom_humidity_rising
+      - sensor.dehumidifier_humidity
+      - sensor.dehumidifier_pressure
+      - sensor.h2ssensor_signal
+      - sensor.dehumidifier_temperature
+      - sensor.dehumidifier_s31_uptime
+      - persistent_notification.config_entry_discovery
+      - sensor.dehumidifier_r2_voltage
+      - sensor.dehumidifier_s31_wifi_signal
+      - sensor.kitty_feeder_s31_uptime
+      
+
+recorder:
+  db_url: !secret db_connection
+  purge_keep_days: 14
+  purge_interval: 1  
+  exclude:
+    domains:
+      - camera
+#      - frl_store
+#      - group
+#      - history_graph
+#      - light_store
+#      - media_player
+#      - scan_store
+#      - timer
+#      - updater
+#      - weather
+#      - zone
+#      - zwave
+    # event_types:
+    #   - component_loaded
+    #   - platform_discovered
+    #   - service_registered
+    entities: # *exclude_entities
+      - sensor.mba_humidity
+      - sensor.mba_temperature
+      - sensor.hx711_custom
+    
+
+# https://community.home-assistant.io/t/how-to-successfully-configure-ha-docker-behind-traefik-for-use-x-forwarded-for-and-ip-ban-enabled/72965/15?u=futuretense
+# ID=$(docker network ls -q -f name=traefik_proxy)  && docker network rm $ID
+# docker network create --subnet=172.14.0.0/16 traefik_proxy
+# set the ip in the traefik container via:
+    # networks:
+    #   default:
+    #     ipv4_address: 172.14.17.3
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+  #  - 172.14.17.3
+    - 172.68.0.87
+ #   - 172.13.16.85
+  #    - 172.24.0.5
+  
+logger:
+  default: info
+  logs:
+    homeassistant.components.isy994: debug
+  
+rest_command:
+  foobar_on:
+    url: 'https://my.isy.io/api/ifttt/FoobarOn/key/8dc6b590-d75f-4c1f-bb66-4492032374d0'
+  foobar_off:
+    url: 'https://my.isy.io/api/ifttt/FoobarOff/key/8dc6b590-d75f-4c1f-bb66-4492032374d0'
+    
+#some_api_key: !env_var MYSQL_USER
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+
+# Discover some devices automatically
+discovery:
+
+ios:
+
+device_tracker:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Weather prediction
+#  - platform: yr
+
+# Text to speech
+tts:
+  - platform: google_translate
+    service_name: google_say
+
+#notify:
+
+nest:
+  client_id: !secret nest_client_id
+  client_secret: !secret nest_client_secret
+  
+mqtt:
+  discovery: true
+  discovery_prefix: homeassistant
+  client_id: home-assistant-1
+  broker: !secret mqtt
+  username: !secret mosquitto_username
+  password: !secret mosquitto_password
+  
+ifttt:
+    key: !secret ifttt_key
+  
+upnp:
+  local_ip: !env_var SERVER_IP
+
+zwave:
+  usb_path: /dev/ttyACM0
+  network_key: !secret usb_network_key
+

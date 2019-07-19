@@ -1,0 +1,7 @@
+  humidity_level:
+    name: Humidity Level
+    min: 40
+    max: 60
+    step: 0.1
+    unit_of_measurement: "%"
+    

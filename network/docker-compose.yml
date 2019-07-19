@@ -1,0 +1,299 @@
+ #network stack
+version: "3.7"
+services:
+
+  openvpn:
+    container_name: openvpn
+    image: kylemanna/openvpn:latest
+    ports:
+      - 1194:1194/udp
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ${USERDIR}/stacks/network/openvpn:/etc/openvpn
+    depends_on:
+      - pihole
+    restart: unless-stopped      
+    networks:
+      pihole_sub:
+        ipv4_address: 172.68.0.99
+
+  pihole:
+    container_name: pihole
+    domainname: docker
+    hostname: pihole
+    image: pihole/pihole:latest #4.2.1
+    depends_on:
+      - traefik
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 1969:80
+      - 8183:443
+    restart: unless-stopped
+    networks:
+      pihole_sub:
+        ipv4_address: 172.68.0.2
+      default:
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ${USERDIR}/stacks/network/pihole/pihole:/etc/pihole
+      - ${USERDIR}/stacks/network/pihole/dnsmasq.d:/etc/dnsmasq.d
+      - ${USERDIR}/stacks/network/pihole/scripts:/etc/scripts
+    extra_hosts:
+      - guacd:${SERVER_IP}
+      - mariadb:${SERVER_IP}
+      - pihole.${DOMAINNAME}:${SERVER_IP}
+      - esphome.${DOMAINNAME}:${SERVER_IP}
+      - homeassistant.${DOMAINNAME}:${SERVER_IP}
+      - c9.${DOMAINNAME}:${SERVER_IP}
+      - guacamole.${DOMAINNAME}:${SERVER_IP}
+      - portainer.${DOMAINNAME}:${SERVER_IP}
+      - sonarr.${DOMAINNAME}:${SERVER_IP}
+      - radarr.${DOMAINNAME}:${SERVER_IP}
+      - plex.${DOMAINNAME}:${SERVER_IP}
+      - qbittorrent.${DOMAINNAME}:${SERVER_IP}
+     # - .${DOMAINNAME}:${SERVER_IP}
+      - docker:${SERVER_IP}
+      - wss:172.16.68.6
+      - nuc:172.16.68.7
+      - monitora:172.16.68.41
+      - cp1:172.16.68.9
+      - isy:172.16.68.40
+      - tplink:172.16.68.15
+      - lv1:172.16.68.13
+      - xps:172.16.68.8
+      - mf.svc.nhl.com:178.62.203.238
+      - mlb-ws-mf.media.mlb.com:178.62.203.238
+      - playback.svcs.mlb.com:178.62.203.238
+    environment:
+      - ServerIP=${SERVER_IP}
+      - PROXY_LOCATION=pihole
+      - VIRTUAL_HOST=pihole.${DOMAINNAME}
+      - VIRTUAL_PORT=80
+      - TZ=${TZ}
+      - WEBPASSWORD=${PIHOLE_PASSWORD}
+      - DNS1=1.1.1.1
+      - DNS2=1.0.0.1
+    restart: unless-stopped      
+    labels:
+      - traefik.frontend.rule=Host:pihole.${DOMAINNAME}
+      - traefik.enable=true
+      - traefik.frontend.headers.SSLRedirect=true
+      - traefik.port=80
+      
+  portainer:
+    image: portainer/portainer:latest #1.20.2
+    container_name: portainer
+    restart: always
+    command: -H unix:///var/run/docker.sock
+    ports:
+      - 9999:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${USERDIR}/stacks/network/portainer/data:/data
+    environment:
+      - TZ=${TZ}
+    networks:
+      - traefik_proxy
+    labels:
+      - traefik.frontend.rule=Host:portainer.${DOMAINNAME}  
+      - traefik.enable=true
+      - traefik.frontend.headers.SSLRedirect=true
+
+  traefik:
+    hostname: traefik
+    image: traefik:latest #1.7-alpine
+    container_name: traefik
+    restart: unless-stopped
+    domainname: ${DOMAINNAME}
+    depends_on:
+      - cloudflare-ddns
+    networks:
+      traefik_proxy:
+      pihole_sub:
+        ipv4_address: 172.68.0.87
+      #default:
+       # ipv4_address: 172.14.17.3
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    environment:
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
+      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /tmp:/tmp
+      - ${USERDIR}/stacks/network/traefik:/etc/traefik
+    labels:
+      - traefik.frontend.rule=Host:traefik.${DOMAINNAME}  
+      - traefik.enable=false
+      - traefik.frontend.headers.SSLRedirect=true
+#############################################################
+      - traefik.backend=traefik
+      - traefik.port=8080
+      - traefik.docker.network=traefik_proxy
+      - traefik.frontend.headers.STSSeconds=315360000
+      - traefik.frontend.headers.browserXSSFilter=true
+      - traefik.frontend.headers.contentTypeNosniff=true
+      - traefik.frontend.headers.forceSTSHeader=true
+#      - traefik.frontend.headers.SSLHost=${DOMAINNAME}
+      - traefik.frontend.headers.SSLHost=${DOMAINNAME}
+      - traefik.frontend.headers.STSIncludeSubdomains=true
+      - traefik.frontend.headers.STSPreload=true
+      - traefik.frontend.headers.frameDeny=true
+#############################################################
+
+  cloudflare-ddns:
+    image: oznu/cloudflare-ddns:latest #amd64     # change 'latest' to 'armhf' or 'aarch64' if running on an arm device
+    container_name: cloudflare-ddns
+    restart: unless-stopped
+    environment:
+      - EMAIL=${CLOUDFLARE_EMAIL}
+      - API_KEY=${CLOUDFLARE_API_KEY}
+      - ZONE=${DOMAINNAME}
+      - PROXIED=false
+
+  cloudflare-ddns-wc:
+    image: oznu/cloudflare-ddns:latest #amd64     # change 'latest' to 'armhf' or 'aarch64' if running on an arm device
+    container_name: cloudflare-ddns-wc
+    restart: unless-stopped
+    environment:
+      - EMAIL=${CLOUDFLARE_EMAIL}
+      - API_KEY=${CLOUDFLARE_API_KEY}
+      - ZONE=${DOMAINNAME}
+      - SUBDOMAIN=*
+      - PROXIED=false
+
+  cloud9:
+    image: sapk/cloud9:latest
+    container_name: cloud9
+    restart: unless-stopped
+    ports:
+      - 8181:8181
+    environment:
+      - C9_WORKSPACE=/workspace
+    volumes:
+      - ${USERDIR}/:/workspace
+    command: --auth ${CLOUD9_AUTH}
+    labels:
+      - traefik.frontend.rule=Host:c9.${DOMAINNAME}
+      - traefik.enable=true
+      - traefik.frontend.headers.SSLRedirect=true
+
+# mysql for home assistant. needs db created manually.
+# https://community.home-assistant.io/t/hassbian-and-mariadb/29149
+# see secrets.yaml for sql commands
+  mariadb:
+    image: "linuxserver/mariadb"
+    container_name: "mariadb"
+    hostname: mariadb
+    volumes:
+      - ${USERDIR}/stacks/network/mariadb:/config
+    ports:
+      - target: 3306
+        published: 3306
+        protocol: tcp
+        mode: host
+    restart: unless-stopped
+    environment:
+      - HA_DATABASE=${HA_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_USER_PASSWORD=${MYSQL_USER_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+
+
+# login to phpmyadmin as root.
+# If error dropping database, edit the following file
+#      sudo nano ~/stacks/network/phpmyadmin/libraries/config.default.php
+#      and change AllowUserDropDatabase to TRUE
+# execute the following:
+#  DROP DATABASE homeassistant;
+#  CREATE DATABASE homeassistant;
+#  GRANT ALL PRIVILEGES ON homeassistant.* to 'sqluser';
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+    links:
+      - mariadb:db
+    ports:
+      - 9191:80
+    volumes:
+      - ${USERDIR}/stacks/network/phpmyadmin:/var/www/html
+      - /tmp:/sessions
+    labels:
+      - traefik.frontend.rule=Host:phpmyadmin.${DOMAINNAME}
+      - traefik.enable=true
+      - traefik.frontend.headers.SSLRedirect=true
+
+  guacd:
+    hostname: guacd
+    container_name: guacd
+    image: guacamole/guacd:latest
+    ports:
+      - 4822:4822
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+    volumes:
+      - ${USERDIR}/stacks/network/guacd/data:/data
+      - ${USERDIR}/stacks/network/guacd/conf:/conf:ro
+
+  guacamole:
+    image: guacamole/guacamole:latest
+    container_name: guacamole
+    restart: unless-stopped
+    depends_on:
+      - guacd
+    ports:
+      - 8060:8080
+    links:
+      - guacd:guacd
+      - mariadb:db
+    environment:
+      GUACD_HOSTNAME: guacd
+      GUACD_PORT: 4822
+      MYSQL_HOSTNAME: mariadb
+      MYSQL_DATABASE: guacamole
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_USER_PASSWORD}
+      GUACAMOLE_HOME: /data
+    labels:
+#      - "traefik.frontend.rule=PathPrefixStrip:/guacamole"
+      - traefik.frontend.rule=Host:guacamole.${DOMAINNAME}
+      - traefik.enable=true
+      - traefik.frontend.headers.SSLRedirect=true
+ #     - "traefik.frontend.redirect.regex=^(.*)/guacamole$$"
+ #     - "traefik.frontend.redirect.replacement=$$1/guacamole/"
+ #     - "traefik.frontend.rule=PathPrefix:/;ReplacePathRegex: ^/guacamole/(.*) /$$1"
+      #- "traefik.http.middlewares.add-foo.addprefix.prefix=/foo"
+    #  - "traefik.frontend.rule=Host:guacamole.${DOMAINNAME};PathPrefix:/blog"
+    volumes:
+      - ${USERDIR}/stacks/network/guacamole/data:/data
+      - ${USERDIR}/stacks/network/guacamole/conf:/conf:ro
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+      
+  default:
+    external:
+      name: traefik_proxy
+      
+    driver: bridge
+    
+  pihole_sub:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.68.0.0/16
+

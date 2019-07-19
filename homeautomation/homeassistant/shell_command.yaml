@@ -1,0 +1,1 @@
+temporarily_disable_pihole: curl 'http://pi.hole/admin/api.php?disable=600&auth=1e33c99d081cea7234f6f277b42d557e5ba156e432a5b899899c5464c0b9c259'

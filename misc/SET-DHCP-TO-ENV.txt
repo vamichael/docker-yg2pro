@@ -1,0 +1,5 @@
+
+#paste the following into /etc/bash.bashrc
+
+IP="$(ip addr show enp0s3  | awk '$1 == "inet" { print $2 }' | cut -d/ -f1)"
+export SERVER_IP=${IP}

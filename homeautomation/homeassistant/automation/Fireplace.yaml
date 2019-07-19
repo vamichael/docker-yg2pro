@@ -1,0 +1,32 @@
+- alias: Fireplace ON
+  hide_entity: false
+  trigger:
+    - platform: state
+      entity_id: switch.ecolink_stls3
+      to: 'on'
+  action:
+    - service: timer.start
+      entity_id: timer.fireplace
+
+- alias: Fireplace OFF
+  hide_entity: false
+  trigger:
+    - platform: state
+      entity_id: switch.ecolink_stls3
+      to: 'off'
+  action:
+    - service: timer.cancel
+      entity_id: timer.fireplace
+        
+- alias: Fireplace Auto-off
+  hide_entity: false
+  trigger:
+    - platform: state
+      entity_id: switch.ecolink_stls3
+      to: 'on'
+      for:
+        minutes: 10
+  action:
+    - service: switch.turn_off
+      entity_id: switch.ecolink_stls3
+    

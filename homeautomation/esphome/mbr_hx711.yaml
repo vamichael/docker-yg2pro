@@ -1,0 +1,52 @@
+esphome:
+  name: mbr_hx711
+  platform: ESP8266
+  board: d1_mini
+  includes:
+    - "custom_hx711.h"
+  libraries:
+    - "https://github.com/bogde/HX711"
+
+#binary_sensor:
+#- platform: homeassistant
+#  name: "Tare"
+#  entity_id: input_boolean.bed_tare
+#  id: bed_tare
+#  filters:
+#    - lambda: |-
+#        auto mysensor = new CustomHX711(2500, -10800.0);
+#        App.register_component(mysensor);
+#        return {false};
+
+sensor:
+- platform: custom
+  lambda: |-
+    auto mysensor = new CustomHX711(2500, -10800.0);
+    App.register_component(mysensor);
+    return {mysensor};
+
+  sensors:
+    name: "HX711 Custom"
+    accuracy_decimals: 1
+    unit_of_measurement: lbs
+
+#######################################################3    
+wifi:
+  ssid: "SoftKittyWarmKitty"
+  password: "68ecececec"
+  fast_connect: true
+  use_address: 172.16.68.124
+  reboot_timeout: 0s
+  
+  manual_ip:
+    static_ip: 172.16.68.124
+    gateway: 172.16.68.1
+    subnet: 255.255.255.0
+      
+logger:
+
+api:
+  password: 'spooey'
+  
+ota:
+  password: 'spooey'

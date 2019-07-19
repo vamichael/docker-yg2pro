@@ -1,0 +1,8 @@
+- alias: homeassistant start-up
+  initial_state: true
+  trigger:
+    platform: homeassistant
+    event: start
+  action:
+    - service: script.turn_on
+      entity_id: script.customstartup

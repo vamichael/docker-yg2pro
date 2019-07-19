@@ -1,0 +1,43 @@
+esphome:
+  name: bed_scale
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: "SoftKittyWarmKitty"
+  password: "68ecececec"
+  use_address: 172.16.68.123
+  reboot_timeout: 0s
+  
+  manual_ip:
+    static_ip: 172.16.68.123
+    gateway: 172.16.68.1
+    subnet: 255.255.255.0
+      
+
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "spooey"
+
+ota:
+  password: "spooey"
+
+sensor:
+  - platform: hx711
+    name: "HX711 Value"
+    dout_pin: D2
+    clk_pin: D3
+    gain: 128
+    update_interval: 1s
+    unit_of_measurement: lb
+    filters:
+      - lambda: |-
+          auto first_mass = 0.0; 
+          auto first_value = -468500;
+          auto second_mass = 3.78;
+          auto second_value = -4785200;
+          return map(x, first_value, second_value, first_mass, second_mass);  

@@ -1,0 +1,10 @@
+{
+  "domain": "isy994mrf",
+  "name": "isy994mrf",
+  "documentation": "https://www.home-assistant.io/components/isy994mrf",
+  "requirements": [
+    "PyISY==1.1.1"
+  ],
+  "dependencies": [],
+  "codeowners": []
+}

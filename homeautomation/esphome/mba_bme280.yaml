@@ -1,0 +1,44 @@
+esphome:
+  name: mba_bme280
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: "SoftKittyWarmKitty"
+  password: "68ecececec"
+  fast_connect: true
+  use_address: 172.16.68.140
+  reboot_timeout: 0s
+  
+  manual_ip:
+    static_ip: 172.16.68.140
+    gateway: 172.16.68.1
+    subnet: 255.255.255.0
+
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: 'spooey'
+
+ota:
+  password: 'spooey'
+
+i2c:
+  sda: D2
+  scl: D1
+  scan: True
+  
+sensor:
+  - platform: bme280
+    temperature:
+      name: "MBA Temperature"
+      oversampling: 16x
+    pressure:
+      name: "MBA Pressure"
+    humidity:
+      name: "MBA Humidity"
+    address: 0x76
+    update_interval: 1s
