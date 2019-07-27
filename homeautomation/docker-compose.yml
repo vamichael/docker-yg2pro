@@ -94,64 +94,44 @@ services:
       - traefik.frontend.headers.SSLRedirect=true
 
 
+
   # monitor:
   #   container_name: monitorNUC
   #   image: mashupmill/presence-monitor:latest
   #   network_mode: host
   #   privileged: true
   #   restart: unless-stopped
-  #   command: ['-b']
-  #   volumes:
-  #     - /etc/localtime:/etc/localtime:ro
+  #   depends_on:
+  #     - mqtt
   #   environment:
   #     MQTT_ADDRESS: ${SERVER_IP}
   #     MQTT_USER: mqtt
   #     MQTT_PASSWORD: mqtt1968!
   #     MQTT_PUBLISHER_IDENTITY: intelNUC
+  #     # - MQTT_TOPICPATH=monitor
+  #     # - MQTT_PORT=1883
+  #     # - MQTT_VERSION=eclipse-mosquitto
+  #     # - MQTT_CERTIFICATE_PATH='/config'
+  #     # - PREF_ARRIVAL_SCAN_ATTEMPTS=1
+  #     # - PREF_DEPART_SCAN_ATTEMPTS=2
+  #     # - PREF_BEACON_EXPIRATION=240
+  #     # - PREF_MINIMUM_TIME_BETWEEN_SCANS=15
+  #     # - PREF_PASS_FILTER_ADV_FLAGS_ARRIVE=".*"
+  #     # - PREF_PASS_FILTER_MANUFACTURER_ARRIVE=".*"
+  #     # - PREF_FAIL_FILTER_ADV_FLAGS_ARRIVE="NONE"
+  #     # - PREF_FAIL_FILTER_MANUFACTURER_ARRIVE="NONE"
   #     # KNOWN_BEACON_ADDRESSES: |
   #     #   FF:FF:FF:FF:FF:FF Red Tag
   #     #   FF:FF:FF:FF:FF:FF Green Tag
   #     KNOWN_STATIC_ADDRESSES: |
   #       88:AE:07:79:63:A0 Mike_iPad
   #       90:E1:7B:15:32:29 Mike_iPhone_XS
-
-  monitor:
-    container_name: monitorNUC
-    image: mashupmill/presence-monitor:latest
-    network_mode: host
-    privileged: true
-    restart: unless-stopped
-    depends_on:
-      - mqtt
-    environment:
-      MQTT_ADDRESS: ${SERVER_IP}
-      MQTT_USER: mqtt
-      MQTT_PASSWORD: mqtt1968!
-      MQTT_PUBLISHER_IDENTITY: intelNUC
-      # - MQTT_TOPICPATH=monitor
-      # - MQTT_PORT=1883
-      # - MQTT_VERSION=eclipse-mosquitto
-      # - MQTT_CERTIFICATE_PATH='/config'
-      # - PREF_ARRIVAL_SCAN_ATTEMPTS=1
-      # - PREF_DEPART_SCAN_ATTEMPTS=2
-      # - PREF_BEACON_EXPIRATION=240
-      # - PREF_MINIMUM_TIME_BETWEEN_SCANS=15
-      # - PREF_PASS_FILTER_ADV_FLAGS_ARRIVE=".*"
-      # - PREF_PASS_FILTER_MANUFACTURER_ARRIVE=".*"
-      # - PREF_FAIL_FILTER_ADV_FLAGS_ARRIVE="NONE"
-      # - PREF_FAIL_FILTER_MANUFACTURER_ARRIVE="NONE"
-      # KNOWN_BEACON_ADDRESSES: |
-      #   FF:FF:FF:FF:FF:FF Red Tag
-      #   FF:FF:FF:FF:FF:FF Green Tag
-      KNOWN_STATIC_ADDRESSES: |
-        88:AE:07:79:63:A0 Mike_iPad
-        90:E1:7B:15:32:29 Mike_iPhone_XS
-      ######- KNOWN_STATIC_ADDRESSES=88:AE:07:79:63:A0 Mike_iPad
-    command: ['-b']
-    volumes:
-      - /opt/bluetooth:/var/lib/bluetooth    
-      - ${USERDIR}/stacks/homeautomation/monitor/config:/config
-      - /etc/localtime:/etc/localtime:ro
+  #     ######- KNOWN_STATIC_ADDRESSES=88:AE:07:79:63:A0 Mike_iPad
+  #   command: ['-b']
+  #   volumes:
+  #     - /opt/bluetooth:/var/lib/bluetooth    
+  #     - ${USERDIR}/stacks/homeautomation/monitor/config:/config
+  #     - /etc/localtime:/etc/localtime:ro
     
 
 networks:

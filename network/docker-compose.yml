@@ -2,21 +2,21 @@
 version: "3.7"
 services:
 
-  openvpn:
-    container_name: openvpn
-    image: kylemanna/openvpn:latest
-    ports:
-      - 1194:1194/udp
-    cap_add:
-      - NET_ADMIN
-    volumes:
-      - ${USERDIR}/stacks/network/openvpn:/etc/openvpn
-    depends_on:
-      - pihole
-    restart: unless-stopped      
-    networks:
-      pihole_sub:
-        ipv4_address: 172.68.0.99
+  # openvpn:
+  #   container_name: openvpn
+  #   image: kylemanna/openvpn:latest
+  #   ports:
+  #     - 1194:1194/udp
+  #   cap_add:
+  #     - NET_ADMIN
+  #   volumes:
+  #     - ${USERDIR}/stacks/network/openvpn:/etc/openvpn
+  #   depends_on:
+  #     - pihole
+  #   restart: unless-stopped      
+  #   networks:
+  #     pihole_sub:
+  #       ipv4_address: 172.68.0.99
 
   pihole:
     container_name: pihole
@@ -54,19 +54,11 @@ services:
       - radarr.${DOMAINNAME}:${SERVER_IP}
       - plex.${DOMAINNAME}:${SERVER_IP}
       - qbittorrent.${DOMAINNAME}:${SERVER_IP}
-     # - .${DOMAINNAME}:${SERVER_IP}
       - docker:${SERVER_IP}
-      - wss:172.16.68.6
-      - nuc:172.16.68.7
-      - monitora:172.16.68.41
-      - cp1:172.16.68.9
-      - isy:172.16.68.40
-      - tplink:172.16.68.15
-      - lv1:172.16.68.13
-      - xps:172.16.68.8
-      - mf.svc.nhl.com:178.62.203.238
-      - mlb-ws-mf.media.mlb.com:178.62.203.238
-      - playback.svcs.mlb.com:178.62.203.238
+     # - .${DOMAINNAME}:${SERVER_IP}
+#      - mf.svc.nhl.com:178.62.203.238
+#      - mlb-ws-mf.media.mlb.com:178.62.203.238
+#      - playback.svcs.mlb.com:178.62.203.238
     environment:
       - ServerIP=${SERVER_IP}
       - PROXY_LOCATION=pihole

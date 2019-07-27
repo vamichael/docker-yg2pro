@@ -1,23 +1,23 @@
-#media stack
+#edia stack
 version: "3.7"
 services:
 
-  airvideohd:
-    container_name: airvideohd
-    image: bondesen/airvideohd:latest
-    restart: unless-stopped
-    ports:
-      - 5353:5353/udp
-      - 45633:45633/tcp
-      - 45633:45633/udp
-    network_mode: host
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-    volumes:
-      - ${USERDIR}/stacks/media/airvideohd:/config 
-      - ${USERDIR}/nas:/media
-      - ${USERDIR}/nas/temp/airvideohd_transcode:/transcode
+  # airvideohd:
+  #   container_name: airvideohd
+  #   image: bondesen/airvideohd:latest
+  #   restart: unless-stopped
+  #   ports:
+  #     - 5353:5353/udp
+  #     - 45633:45633/tcp
+  #     - 45633:45633/udp
+  #   network_mode: host
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #   volumes:
+  #     - ${USERDIR}/stacks/media/airvideohd:/config 
+  #     - ${USERDIR}/nas:/media
+  #     - ${USERDIR}/nas/temp/airvideohd_transcode:/transcode
       
   # https://www.reddit.com/r/PleX/comments/ai9xyw/plex_running_in_docker_cant_find_server/eenf61e/
   plexms:
@@ -87,6 +87,8 @@ services:
       
   sonarr:
     container_name: sonarr
+#    links:
+#      - jackett:jackett
     image: linuxserver/sonarr:latest
     restart: unless-stopped
     depends_on:

@@ -94,31 +94,31 @@ history:
       
 
 recorder:
-  db_url: !secret db_connection
-  purge_keep_days: 14
-  purge_interval: 1  
-  exclude:
-    domains:
-      - camera
-#      - frl_store
-#      - group
-#      - history_graph
-#      - light_store
-#      - media_player
-#      - scan_store
-#      - timer
-#      - updater
-#      - weather
-#      - zone
-#      - zwave
-    # event_types:
-    #   - component_loaded
-    #   - platform_discovered
-    #   - service_registered
-    entities: # *exclude_entities
-      - sensor.mba_humidity
-      - sensor.mba_temperature
-      - sensor.hx711_custom
+#   db_url: !secret db_connection
+#   purge_keep_days: 14
+#   purge_interval: 1  
+#   exclude:
+#     domains:
+#       - camera
+# #      - frl_store
+# #      - group
+# #      - history_graph
+# #      - light_store
+# #      - media_player
+# #      - scan_store
+# #      - timer
+# #      - updater
+# #      - weather
+# #      - zone
+# #      - zwave
+#     # event_types:
+#     #   - component_loaded
+#     #   - platform_discovered
+#     #   - service_registered
+#     entities: # *exclude_entities
+#       - sensor.mba_humidity
+#       - sensor.mba_temperature
+#       - sensor.hx711_custom
     
 
 # https://community.home-assistant.io/t/how-to-successfully-configure-ha-docker-behind-traefik-for-use-x-forwarded-for-and-ip-ban-enabled/72965/15?u=futuretense

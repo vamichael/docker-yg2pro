@@ -1,7 +1,7 @@
 declare -x OVPN_AUTH=
 declare -x OVPN_CIPHER=
 declare -x OVPN_CLIENT_TO_CLIENT=
-declare -x OVPN_CN=vpn.noakland.com
+declare -x OVPN_CN=vpn.suttondr.net
 declare -x OVPN_COMP_LZO=0
 declare -x OVPN_DEFROUTE=1
 declare -x OVPN_DEVICE=tun
@@ -21,5 +21,5 @@ declare -x OVPN_PROTO=udp
 declare -x OVPN_PUSH=()
 declare -x OVPN_ROUTES=([0]="192.168.254.0/24")
 declare -x OVPN_SERVER=192.168.255.0/24
-declare -x OVPN_SERVER_URL=udp://vpn.noakland.com
+declare -x OVPN_SERVER_URL=udp://vpn.suttondr.net
 declare -x OVPN_TLS_CIPHER=
