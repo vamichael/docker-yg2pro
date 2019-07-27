@@ -2,8 +2,8 @@
 #   duration: '00:15:00'
 # front_door:
 #   #duration: '00:05:00'
-# auto_lock_disable:
-#   duration: '04:00:00'
+auto_lock_disable:
+  duration: '04:00:00'
 # litterbox:
 #   duration: '00:15:00'
 # fireplace:

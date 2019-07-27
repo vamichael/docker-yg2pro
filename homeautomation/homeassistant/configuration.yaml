@@ -33,29 +33,24 @@ shell_command: !include shell_command.yaml
 #homekit: !include homekit.yaml
 timer: !include timers.yaml
 input_boolean: !include input_booleans.yaml
-input_number: !include input_numbers.yaml
+#input_number: !include input_numbers.yaml
 sensor: !include sensors.yaml
 binary_sensor: !include binary_sensors.yaml
 switch: !include switches.yaml
 cover: !include covers.yaml
-input_text: !include input_text.yaml
-input_datetime: !include input_datetime.yaml
+#input_text: !include input_text.yaml
+#input_datetime: !include input_datetime.yaml
 #zone: !include zone.yaml
 #media_player: !include media_players.yaml
 #=====================================External Files==============================================
 
-isy994:
-  host: !secret isy_host
-  username: !secret isy_username
-  password: !secret isy_password
-#  tls: '1.2'
-# ignore_string: HomeAssistant
- 
-# isy994mrf:
+# isy994:
 #   host: !secret isy_host
 #   username: !secret isy_username
 #   password: !secret isy_password
-
+# #  tls: '1.2'
+# # ignore_string: HomeAssistant
+ 
 history:
   exclude:
     domains:
@@ -73,24 +68,24 @@ history:
 #      - weather
 #      - zone
 #      - zwave
-    entities: # &exclude_entities
-      - sensor.mba_humidity
-      - sensor.mba_temperature
-      - sensor.hx711_custom
+#    entities: # &exclude_entities
+    #   - sensor.mba_humidity
+    #   - sensor.mba_temperature
+    #   - sensor.hx711_custom
 
-      - sensor.h2ssensor_uptime
-      - sensor.h2ssensor_h2s
-      - binary_sensor.bathroom_humidity_falling
-      - binary_sensor.bathroom_humidity_rising
-      - sensor.dehumidifier_humidity
-      - sensor.dehumidifier_pressure
-      - sensor.h2ssensor_signal
-      - sensor.dehumidifier_temperature
-      - sensor.dehumidifier_s31_uptime
-      - persistent_notification.config_entry_discovery
-      - sensor.dehumidifier_r2_voltage
-      - sensor.dehumidifier_s31_wifi_signal
-      - sensor.kitty_feeder_s31_uptime
+    #   - sensor.h2ssensor_uptime
+    #   - sensor.h2ssensor_h2s
+    #   - binary_sensor.bathroom_humidity_falling
+    #   - binary_sensor.bathroom_humidity_rising
+    #   - sensor.dehumidifier_humidity
+    #   - sensor.dehumidifier_pressure
+    #   - sensor.h2ssensor_signal
+    #   - sensor.dehumidifier_temperature
+    #   - sensor.dehumidifier_s31_uptime
+    #   - persistent_notification.config_entry_discovery
+    #   - sensor.dehumidifier_r2_voltage
+    #   - sensor.dehumidifier_s31_wifi_signal
+    #   - sensor.kitty_feeder_s31_uptime
       
 
 recorder:
@@ -163,7 +158,7 @@ updater:
 # Discover some devices automatically
 discovery:
 
-ios:
+#ios:
 
 device_tracker:
 
