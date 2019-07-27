@@ -1,7 +1,7 @@
 homeassistant:
   name: Home
-  latitude: 38.895808
-  longitude: -77.106684
+  latitude: 38.8948
+  longitude: -77.0934
   elevation: 269
   # Impacts weather/sunrise data (altitude above sea level in meters)
   # metric for Metric, imperial for Imperial
@@ -28,9 +28,9 @@ frontend: !include frontend.yaml
 group: !include groups.yaml
 automation: !include_dir_merge_list automation/
 script: !include_dir_merge_named script/
-google_assistant: !include google_assistant.yaml
+#google_assistant: !include google_assistant.yaml
 shell_command: !include shell_command.yaml
-homekit: !include homekit.yaml
+#homekit: !include homekit.yaml
 timer: !include timers.yaml
 input_boolean: !include input_booleans.yaml
 input_number: !include input_numbers.yaml
@@ -40,7 +40,7 @@ switch: !include switches.yaml
 cover: !include covers.yaml
 input_text: !include input_text.yaml
 input_datetime: !include input_datetime.yaml
-zone: !include zone.yaml
+#zone: !include zone.yaml
 #media_player: !include media_players.yaml
 #=====================================External Files==============================================
 
@@ -94,28 +94,29 @@ history:
       
 
 recorder:
-#   db_url: !secret db_connection
-#   purge_keep_days: 14
-#   purge_interval: 1  
-#   exclude:
-#     domains:
-#       - camera
-# #      - frl_store
-# #      - group
-# #      - history_graph
-# #      - light_store
-# #      - media_player
-# #      - scan_store
-# #      - timer
-# #      - updater
-# #      - weather
-# #      - zone
-# #      - zwave
-#     # event_types:
-#     #   - component_loaded
-#     #   - platform_discovered
-#     #   - service_registered
-#     entities: # *exclude_entities
+   db_url: !secret db_connection
+   purge_keep_days: 14
+   purge_interval: 1  
+   exclude:
+     domains:
+       - camera
+ #      - frl_store
+ #      - group
+ #      - history_graph
+ #      - light_store
+ #      - media_player
+ #      - scan_store
+ #      - timer
+ #      - updater
+ #      - weather
+ #      - zone
+ #      - zwave
+     # event_types:
+     #   - component_loaded
+     #   - platform_discovered
+     #   - service_registered
+# *exclude_entities
+#     entities: 
 #       - sensor.mba_humidity
 #       - sensor.mba_temperature
 #       - sensor.hx711_custom
@@ -188,9 +189,9 @@ tts:
 
 #notify:
 
-nest:
-  client_id: !secret nest_client_id
-  client_secret: !secret nest_client_secret
+#nest:
+#  client_id: !secret nest_client_id
+#  client_secret: !secret nest_client_secret
   
 mqtt:
   discovery: true

@@ -1,13 +1,13 @@
-garage_door:
-  duration: '00:15:00'
-front_door:
-  #duration: '00:05:00'
-auto_lock_disable:
-  duration: '04:00:00'
-litterbox:
-  duration: '00:15:00'
-fireplace:
-  duration: '00:10:00'
-car_close_garage:
-  duration: '00:00:01'
-kitty_feeder:
+# garage_door:
+#   duration: '00:15:00'
+# front_door:
+#   #duration: '00:05:00'
+# auto_lock_disable:
+#   duration: '04:00:00'
+# litterbox:
+#   duration: '00:15:00'
+# fireplace:
+#   duration: '00:10:00'
+# car_close_garage:
+#   duration: '00:00:01'
+# kitty_feeder:

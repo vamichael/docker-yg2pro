@@ -1,10 +1,10 @@
--  name: Dena Work
-   latitude: 38.92545013164562
-   longitude: -77.22378707305165
-   radius: 100
-   icon: mdi:work
+# -  name: Dena Work
+#    latitude: 38.92545013164562
+#    longitude: -77.22378707305165
+#    radius: 100
+#    icon: mdi:work
     
--  name: Home Zone
-   latitude: 38.895808
-   longitude: -77.106684
-   radius: 4800
+# -  name: Home Zone
+#    latitude: 38.895808
+#    longitude: -77.106684
+#    radius: 4800

@@ -1,27 +1,6 @@
-autolock:
-  name: Auto Lock
-  initial: on
-  icon: mdi:key-remove
-calibrate:
-  name: Calibrate
-  initial: off
-  icon: mdi:key-remove
 version_checked:
   name: Version checked
   initial: off
 system_ready:
   name: System ready
-  initial: off
-humidity_spiked:
-  name: Humidity spiked
-  initial: off
-esp_car_debug:
-bmw_opened_garage:
-  initial: off
-hyundai_opened_garage:
-  initial: off
-auto_fan:
-bed_tare:
-  initial: off
-feeder_notify:
   initial: off

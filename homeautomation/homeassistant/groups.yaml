@@ -20,11 +20,6 @@ google_home_devices:
     - media_player.bedroom_speaker
     - media_player.den_speaker
 
-auto_lock:
-  name: Auto-lock
-  entities:
-    - input_boolean.autolock
-    - timer.auto_lock_disable
 
 battery:
   name: Battery Levels

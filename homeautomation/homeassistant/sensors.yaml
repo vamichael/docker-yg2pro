@@ -38,77 +38,7 @@
 #     - !secret mikes_secret_email
 
 
-- platform: template
-  sensors:
-
-    showbmw:
-      friendly_name: BMW
-      value_template: "{{states.sensor.bmw.state | int}}"
-      unit_of_measurement: 'seconds'
-      icon_template: mdi:mdi-timelapse
-      value_template: > 
-        {% if states.sensor.bmw.state == 'unavailable' %}
-          0
-        {% else %}
-          {{states.sensor.bmw.state | int}}
-        {% endif %}
-
-    showhyundai:
-      friendly_name: HYUNDAI
-      unit_of_measurement: 'seconds'
-      icon_template: mdi:mdi-timelapse
-      value_template: > 
-        {% if (states.sensor.hyundai.state == 'unavailable') %}
-          0
-        {% else %}
-          {{states.sensor.hyundai.state | int}}
-        {% endif %}
-
-    battery_frontdoor:
-      friendly_name: 'Front Door Battery'
-      value_template: "{% if states.zwave.front_door_lock %}
-          {{ states.zwave.front_door_lock.attributes.battery_level }}
-        {% else %}
-          unknown
-        {% endif %}"
-      unit_of_measurement: '%'
-      icon_template: >-
-        {% set battery_level = states('sensor.battery_frontdoor')|int('unknown') %}
-        {% set battery_round = (battery_level|int / 10)|int * 10 %}
-        {% if battery_level == 'unknown' %}
-          mdi:battery-unknown
-        {% else %}
-          {% if battery_round >= 100 %}
-            mdi:battery
-          {% elif battery_round > 0 %}
-            mdi:battery-{{ battery_round }}
-          {% else %}
-            mdi:battery-alert
-          {% endif %}
-        {% endif %}
-
-    vision_front_door_battery:
-      friendly_name: "Front Door Sensor Battery"
-      value_template: "{% if states.zwave.vision_front_door_sensor  %}
-        {{ states.zwave.vision_front_door_sensor.attributes.battery_level }}
-        {% else %}
-          Unknown
-        {% endif %}"
-      unit_of_measurement: '%'
-      # entity_id: zwave.vision.front_door_sensor
-      icon_template: >-
-        {% set battery_level = states.zwave.vision_front_door_sensor.attributes.battery_level|int('unknown') %}
-        {% set battery_round = (battery_level|int / 10)|int * 10 %}
-        {% if battery_level == 'unknown' %}
-          mdi:battery-unknown
-        {% else %}
-          {% if battery_round >= 100 %}
-            mdi:battery
-          {% elif battery_round > 0 %}
-            mdi:battery-{{ battery_round }}
-          {% else %}
-            mdi:battery-alert
-          {% endif %}
-        {% endif %}
+#- platform: template
+#  sensors:
 
 
