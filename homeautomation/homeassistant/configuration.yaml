@@ -51,11 +51,12 @@ cover: !include covers.yaml
 # #  tls: '1.2'
 # # ignore_string: HomeAssistant
  
-history:
-  exclude:
-    domains:
+# history:
+#   exclude:
+#     domains:
+
 #      - automation
-      - camera
+#      - camera
 #      - frl_store
 #      - group
 #      - history_graph
@@ -92,9 +93,10 @@ recorder:
    db_url: !secret db_connection
    purge_keep_days: 14
    purge_interval: 1  
-   exclude:
-     domains:
-       - camera
+#   exclude:
+#      domains:
+#       - camera
+
  #      - frl_store
  #      - group
  #      - history_graph
@@ -132,10 +134,10 @@ http:
  #   - 172.13.16.85
   #    - 172.24.0.5
   
-logger:
-  default: info
-  logs:
-    homeassistant.components.isy994: debug
+# logger:
+#   default: info
+#   logs:
+#     homeassistant.components.isy994: debug
   
 rest_command:
   foobar_on:
@@ -166,7 +168,7 @@ device_tracker:
 conversation:
 
 # View all events in a logbook
-logbook:
+#logbook:
 
 # Enables a map showing the location of tracked devices
 map:
