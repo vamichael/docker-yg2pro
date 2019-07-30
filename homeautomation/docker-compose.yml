@@ -23,8 +23,8 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
       - SERVER_IP=${SERVER_IP}
-      - DB_CONNECTION=mysql://${MYSQL_USER}:${MYSQL_USER_PASSWORD}@${SERVER_IP}/${HA_DATABASE}?charset=utf8
       - DOMAINNAME=${DOMAINNAME}
+      - DB_CONNECTION=mysql://${MYSQL_USER}:${MYSQL_USER_PASSWORD}@mariadb/${HA_DATABASE}?charset=utf8
     network_mode: host
     labels:
       - com.centurylinklabs.watchtower.enable=true
