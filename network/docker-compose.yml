@@ -23,6 +23,11 @@ services:
     domainname: docker
     hostname: pihole
     image: pihole/pihole:latest #4.2.1
+
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+      
     depends_on:
       - traefik
     ports:
